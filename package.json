@@ -1,8 +1,8 @@
 {
-  "name": "async-debug",
+  "name": "reloady",
   "version": "1.0.0",
-  "description": "live async debugger",
+  "description": "code reload buddy",
   "main": "index.js",
-  "repository": "github.com/sleexyz/async-debug",
+  "repository": "https://github.com/sleexyz/reloady",
   "license": "MIT"
 }

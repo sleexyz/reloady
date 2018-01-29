@@ -1,2 +1,3 @@
-console.log(foo);
-console.log("asdfasdf");
+module.exports = async ({ foo, bar }) => {
+  console.log({ foo, bar });
+};
