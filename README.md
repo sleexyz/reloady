@@ -1,4 +1,6 @@
 # Reloady
+[![npm version](https://img.shields.io/npm/v/reloady.svg?style=flat-square)](https://www.npmjs.com/package/reloady)
+
 
 Automatically re-execute code when it changes, from anywhere in your code.
 
