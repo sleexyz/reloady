@@ -10,6 +10,10 @@ Great for:
 
 ## Usage
 
+```
+yarn add --dev reloady
+```
+
 Reloady can be initialized anywhere in your code. Just give it:
 
 1. an absolute path to a module with a function as a default export
