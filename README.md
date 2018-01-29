@@ -2,11 +2,11 @@
 [![npm version](https://img.shields.io/npm/v/reloady.svg?style=flat-square)](https://www.npmjs.com/package/reloady)
 
 
-Automatically re-execute code when it changes, from anywhere in your code.
+Automatically re-evaluate code, anywhere you want.
 
 Great for:
 - checkpointing while debugging slow tests (think browser tests)
-- live-coding with node.js
+- any other sort of live-coding with node.js
 
 ![reloady buddy](https://user-images.githubusercontent.com/1505617/35489842-be91bb66-0468-11e8-88e8-babe130ac3a2.png)
 
@@ -16,9 +16,9 @@ Great for:
 yarn add --dev reloady
 ```
 
-Reloady can be initialized anywhere in your code. Just give it:
+Reloady can be initialized where ever you want. Just give it:
 
-1. an absolute path to a module with a function as a default export
+1. an absolute path to a module that exports a function
 2. an optional argument to call the function with
 
 Example:
@@ -43,6 +43,7 @@ Reloady returns a promise that never resolves, so you can `await` it as a sort o
 
 Now every time you change `./debug.js`, the module will be re-required and re-invoked with its given arguments.
 
+Example `debug.js`:
 ```js
 // ./debug.js
 
