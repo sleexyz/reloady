@@ -28,7 +28,7 @@ const reloady = require("reloady");
 ```
 
 Reloady returns a promise that never resolves, so if you want you can `await` it in async function bodies
-as a sort of "debugger".
+as a sort of debugger.
 
 ---
 
