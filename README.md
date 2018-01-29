@@ -2,6 +2,8 @@
 
 Your code reload buddy.
 
+![buddy](https://user-images.githubusercontent.com/1505617/35489842-be91bb66-0468-11e8-88e8-babe130ac3a2.png)
+
 Re-execute functions on code changes, from anywhere in your code.
 
 Great for:
