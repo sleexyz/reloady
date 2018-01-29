@@ -1,7 +1,7 @@
 {
   "name": "reloady",
-  "version": "1.0.0",
-  "description": "code reload buddy",
+  "version": "1.0.1",
+  "description": "node code auto reload",
   "main": "index.js",
   "repository": "https://github.com/sleexyz/reloady",
   "license": "MIT",
