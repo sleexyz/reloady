@@ -1,9 +1,11 @@
 const sane = require("sane");
 const path = require("path");
 
-module.exports = async function reloady(modulePath, arg) {
+module.exports = async function reloady(options) {
+  const { path: modulePath, input } = options;
+
   let state = {
-    resolve: undefined,
+    resolve: undefined
   };
   {
     const pathName = require.resolve(modulePath);
@@ -18,7 +20,7 @@ module.exports = async function reloady(modulePath, arg) {
   while (true) {
     try {
       const fn = require(modulePath);
-      await fn(arg);
+      await fn(input);
     } catch (e) {
       console.error(e);
     }

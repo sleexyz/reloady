@@ -14,7 +14,7 @@ Great for:
 
 Reloady can be initialized anywhere in your code. Just give it:
 
-1. a path to a module with a function as a default export
+1. an absolute path to a module with a function as a default export
 2. an optional argument to call the function with
 
 ```js
@@ -23,7 +23,10 @@ const reloady = require("reloady");
 (async () => {
   const foo = 1;
   const bar = 2;
-  await reloady("./debug", { foo, bar}));
+  await reloady({
+    path: require.resolve("./debug"),
+    input: { foo, bar }
+  });
 })();
 ```
 
