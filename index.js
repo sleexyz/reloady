@@ -1,42 +1,30 @@
-const process = require("process");
+const sane = require("sane");
+const path = require("path");
 
-let state = {
-  resolve: undefined,
-  dummyInterval: undefined
-};
-
-process.on("SIGHUP", () => {
-  state.resolve();
-});
-
-async function reloady(modulePath, arg) {
-  try {
-    const fn = require(modulePath);
-    await fn(arg);
-  } catch (e) {
-    console.error(e);
+module.exports = async function reloady(modulePath, arg) {
+  let state = {
+    resolve: undefined,
+  };
+  {
+    const pathName = require.resolve(modulePath);
+    const dir = path.dirname(pathName);
+    const watcher = sane(dir);
+    watcher.on("change", (filename) => {
+      if (filename === path.basename(pathName)) {
+        state.resolve();
+      }
+    });
   }
-  const action = await waitNext();
-  delete require.cache[require.resolve(modulePath)];
-  return reloady(modulePath, arg);
+  while (true) {
+    try {
+      const fn = require(modulePath);
+      await fn(arg);
+    } catch (e) {
+      console.error(e);
+    }
+    const action = await new Promise(resolve => {
+      state.resolve = resolve;
+    });
+    delete require.cache[require.resolve(modulePath)];
+  }
 };
-
-function waitNext() {
-  return new Promise((resolve, reject) => {
-    state.resolve = (arg) => {
-      clearInterval(state.interval);
-      delete state.interval;
-      resolve(arg);
-    };
-
-    // keep node from exiting
-    state.interval = setInterval(() => {}, 100000000);
-  });
-}
-
-reloady.reload = () => {
-  state.resolve();
-}
-
-global.reloady = reloady;
-module.exports = reloady;

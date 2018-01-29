@@ -4,5 +4,8 @@
   "description": "code reload buddy",
   "main": "index.js",
   "repository": "https://github.com/sleexyz/reloady",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "sane": "^2.3.0"
+  }
 }
