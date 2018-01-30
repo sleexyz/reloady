@@ -2,10 +2,29 @@
   "name": "reloady",
   "version": "1.0.1",
   "description": "node code auto reload",
-  "main": "index.js",
+  "main": "lib/index.js",
   "repository": "https://github.com/sleexyz/reloady",
   "license": "MIT",
+  "devDependencies": {
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "babel-plugin-transform-flow-strip-types": "^6.22.0",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
+    "flow-bin": "^0.61.0",
+    "jest": "^21.2.1",
+    "prettier": "^1.10.2",
+    "tmp": "^0.0.33"
+  },
   "dependencies": {
     "sane": "^2.3.0"
+  },
+  "scripts": {
+    "build": "yarn clean && yarn build-babel",
+    "clean": "rm -rf ./lib",
+    "build-babel": "babel src --out-dir lib",
+    "check-all": "flow && yarn test && yarn format-check",
+    "format": "prettier --write '{src,tests}/**/*.js'",
+    "format-check": "prettier -l '{src,tests}/**/*.js'",
+    "test": "jest"
   }
 }

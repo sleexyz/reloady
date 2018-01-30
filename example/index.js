@@ -1,4 +1,4 @@
-const reloady = require("../");
+const reloady = require("../src");
 
 async function main () {
   const foo = 1;

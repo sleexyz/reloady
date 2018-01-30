@@ -1,17 +1,22 @@
-const sane = require("sane");
-const path = require("path");
+import sane from "sane";
+import path from "path";
 
-module.exports = async function reloady(options) {
+type State = {
+  resolve: ?Promise<void>
+};
+
+module.exports = async function reloady(options): Promise<void> {
   const { path: modulePath, input } = options;
 
-  let state = {
+  let state: State = {
     resolve: undefined
   };
+
   {
     const pathName = require.resolve(modulePath);
     const dir = path.dirname(pathName);
     const watcher = sane(dir);
-    watcher.on("change", (filename) => {
+    watcher.on("change", filename => {
       if (filename === path.basename(pathName)) {
         state.resolve();
       }
