@@ -70,18 +70,25 @@ module.exports = ({foo}) => {
     ]);
 
     jestProcess.stderr.on("data", chunk => {
+      console.log(chunk.toString());
       state.queue.push(chunk.toString());
       if (state.resolve) {
-        const output = state.queue.join("");
-        state.queue = [];
-        (state.resolve: any)(output);
-        delete state.resolve;
+        (state.resolve: any)(_getOutput());
       }
     });
 
+    function _getOutput(): string {
+      const output = state.queue.join("");
+      state.queue = [];
+      delete state.resolve;
+      return output;
+    }
+
     function getOutput(): Promise<string> {
       return new Promise(resolve => {
-        if (state.queue.length > 0)
+        if (state.queue.length > 0) {
+          return resolve(_getOutput());
+        }
         state.resolve = resolve;
       });
     }
@@ -96,8 +103,10 @@ module.exports = ({foo}) => {
 `
     );
 
-    await wait(1000);
-    await getOutput()
+    {
+      const output = await getOutput();
+      /* expect(output).toEqual(expect.stringContaining("foo"));*/
+    }
 
 
     fs.writeFileSync(
@@ -107,7 +116,33 @@ module.exports = ({foo}) => {
   console.log("bar");
 }
 `);
-    await new Promise(resolve => setTimeout(resolve, 100000));
+    {
+      const output = await getOutput();
+      /* expect(output).toEqual(expect.stringContaining("bar"));*/
+    }
+
+    fs.writeFileSync(
+      "./debug.js",
+      `
+module.exports = ({foo}) => {
+  console.log("baz");
+}
+       `);
+    {
+      const output = await getOutput();
+      /* expect(output).toEqual(expect.stringContaining("baz"));*/
+    }
+    fs.writeFileSync(
+      "./debug.js",
+      `
+module.exports = ({foo}) => {
+  console.log("basdfaz");
+}
+       `);
+    {
+      const output = await getOutput();
+      /* expect(output).toEqual(expect.stringContaining("baz"));*/
+    }
   });
 });
 
