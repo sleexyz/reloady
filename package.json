@@ -29,6 +29,6 @@
     "check-all": "flow && yarn test && yarn format-check",
     "format": "prettier --write '{src,tests}/**/*.js'",
     "format-check": "prettier -l '{src,tests}/**/*.js'",
-    "test": "jest --runInBand"
+    "test": "yarn link && jest --runInBand"
   }
 }
