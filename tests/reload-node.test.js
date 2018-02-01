@@ -9,7 +9,7 @@ describe("when reloady is run with node", () => {
 
   it("can continuously reload code", async () => {
     fs.writeFileSync("./package.json", '{ "license": "MIT" }');
-    childProcess.execSync("yarn link reloady && yarn ");
+    childProcess.execSync("yarn link reloady");
 
     fs.writeFileSync(
       "./debug.js",

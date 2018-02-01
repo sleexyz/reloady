@@ -9,7 +9,7 @@ describe("when reloady is run in a jest test", () => {
 
   it("can continuously reload code", async () => {
     fs.writeFileSync("./package.json", '{ "license": "MIT" }');
-    childProcess.execSync("yarn link reloady && yarn ");
+    childProcess.execSync("yarn link reloady");
 
     fs.writeFileSync(
       "./debug.js",
