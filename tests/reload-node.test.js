@@ -3,7 +3,7 @@ import tmp from "tmp";
 import fs from "fs";
 import * as TestUtils from "./test_utils";
 
-describe("when reloady is run in a jest test", () => {
+describe("when reloady is run with node", () => {
   it("can continuously reload code", async () => {
     TestUtils.inTempDir();
     const reloadyPath = require.resolve("../lib");
@@ -12,41 +12,36 @@ describe("when reloady is run in a jest test", () => {
 
     fs.writeFileSync(
       "./debug.js",
-      `module.exports = input => {console.log(input);};`
+      `module.exports = input => {console.error(input);};`
     );
 
     fs.writeFileSync(
-      "./index.test.js",
+      "./index.js",
       `
 const reloady = require(${JSON.stringify(reloadyPath)});
 
-it("runs", async () => {
+(async () => {
   await reloady({
     path: require.resolve("./debug"),
     input: "foo"
   });
-});
+})();
 `
     );
 
-    const jestProcess = TestUtils.withWrappedProcess(
-      "CI=true jest --json index.test.js"
-    );
-
-    expect(await jestProcess.getOutput()).toContain("foo");
+    const nodeProcess = TestUtils.withWrappedProcess("node index.js");
+    expect(await nodeProcess.getOutput()).toContain("foo");
 
     fs.writeFileSync(
       "./debug.js",
-      `module.exports = () => {console.log("bar");};`
+      `module.exports = () => {console.error("bar");};`
     );
-
-    expect(await jestProcess.getOutput()).toContain("bar");
+    expect(await nodeProcess.getOutput()).toContain("bar");
 
     fs.writeFileSync(
       "./debug.js",
-      `module.exports = () => {console.log("baz");};`
+      `module.exports = () => {console.error("baz");};`
     );
-
-    expect(await jestProcess.getOutput()).toContain("baz");
+    expect(await nodeProcess.getOutput()).toContain("baz");
   });
 });

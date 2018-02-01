@@ -1,5 +1,6 @@
 // @flow
 import childProcess from "child_process";
+import tmp from "tmp";
 
 let afterEaches = [];
 afterEach(() => {
@@ -69,7 +70,7 @@ export function inTempDir() {
   const cwd = process.cwd();
   const tmpDir = tmp.dirSync({ unsafeCleanup: true });
   process.chdir(tmpDir.name);
-  TestUtils.pushAfterEach(() => {
+  pushAfterEach(() => {
     process.chdir(cwd);
     tmpDir.removeCallback();
   });
