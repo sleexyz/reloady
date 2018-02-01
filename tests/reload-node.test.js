@@ -31,19 +31,19 @@ const reloady = require("reloady");
     );
 
     const nodeProcess = new TestUtils.WrappedProcess("node index.js");
-    await TestUtils.wait(200);
+    await TestUtils.wait(2000);
 
     fs.writeFileSync(
       "./debug.js",
       `module.exports = () => {console.error("bar");};`
     );
-    await TestUtils.wait(100);
+    await TestUtils.wait(1000);
 
     fs.writeFileSync(
       "./debug.js",
       `module.exports = () => {console.error("baz");};`
     );
-    await TestUtils.wait(100);
+    await TestUtils.wait(1000);
     const output = nodeProcess.getOutput();
     expect(output).toContain("foo");
     expect(output).toContain("bar");
