@@ -29,7 +29,7 @@ it("runs", async () => {
 `
     );
 
-    const jestProcess = TestUtils.withWrappedProcess(
+    const jestProcess = new TestUtils.WrappedProcess(
       "CI=true jest --json index.test.js"
     );
 
@@ -48,5 +48,6 @@ it("runs", async () => {
     );
 
     expect(await jestProcess.getOutput()).toContain("baz");
+    jestProcess.exit();
   });
 });

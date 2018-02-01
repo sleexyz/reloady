@@ -29,7 +29,7 @@ const reloady = require(${JSON.stringify(reloadyPath)});
 `
     );
 
-    const nodeProcess = TestUtils.withWrappedProcess("node index.js");
+    const nodeProcess = new TestUtils.WrappedProcess("node index.js");
     expect(await nodeProcess.getOutput()).toContain("foo");
 
     fs.writeFileSync(
@@ -43,5 +43,7 @@ const reloady = require(${JSON.stringify(reloadyPath)});
       `module.exports = () => {console.error("baz");};`
     );
     expect(await nodeProcess.getOutput()).toContain("baz");
+
+    nodeProcess.exit();
   });
 });

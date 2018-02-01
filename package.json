@@ -18,6 +18,9 @@
   "dependencies": {
     "sane": "^2.3.0"
   },
+  "jest": {
+    "setupTestFrameworkScriptFile": "./tests/test_utils.js"
+  },
   "scripts": {
     "build": "yarn clean && yarn build-babel",
     "clean": "rm -rf ./lib",
@@ -25,6 +28,6 @@
     "check-all": "flow && yarn test && yarn format-check",
     "format": "prettier --write '{src,tests}/**/*.js'",
     "format-check": "prettier -l '{src,tests}/**/*.js'",
-    "test": "jest"
+    "test": "jest --runInBand"
   }
 }

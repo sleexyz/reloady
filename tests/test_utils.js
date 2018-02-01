@@ -17,15 +17,7 @@ export async function wait(n: number) {
   await new Promise(resolve => setTimeout(resolve, n));
 }
 
-export function withWrappedProcess(shellCmd: string) {
-  const wrappedProcess = new ProcessWrapper(shellCmd);
-  afterEaches.push(() => {
-    wrappedProcess.exit();
-  });
-  return wrappedProcess;
-}
-
-class ProcessWrapper {
+export class WrappedProcess {
   state: {
     queue: Array<string>,
     resolve: ?(string) => void
