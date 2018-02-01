@@ -29,7 +29,7 @@ export class WrappedProcess {
   jestProcess: *;
 
   constructor(shellCmd: string) {
-    this.jestProcess = childProcess.spawn("sh", ["-c", shellCmd]);
+    this.jestProcess = childProcess.exec(shellCmd);
     this.jestProcess.stderr.on("data", chunk => {
       this.state.queue.push(chunk.toString());
       if (this.state.resolve) {
@@ -58,11 +58,14 @@ export class WrappedProcess {
   }
 }
 
-export function inTempDir() {
+export function withTmpDir() {
   const cwd = process.cwd();
-  const tmpDir = tmp.dirSync({ unsafeCleanup: true });
-  process.chdir(tmpDir.name);
-  pushAfterEach(() => {
+  let tmpDir;
+  beforeEach(() => {
+    tmpDir = tmp.dirSync({ unsafeCleanup: true });
+    process.chdir(tmpDir.name);
+  });
+  afterEach(() => {
     process.chdir(cwd);
     tmpDir.removeCallback();
   });

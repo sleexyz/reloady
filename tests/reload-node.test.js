@@ -1,14 +1,15 @@
 //@flow
 import tmp from "tmp";
 import fs from "fs";
+import childProcess from "child_process";
 import * as TestUtils from "./test_utils";
 
 describe("when reloady is run with node", () => {
-  it("can continuously reload code", async () => {
-    TestUtils.inTempDir();
-    const reloadyPath = require.resolve("../lib");
+  TestUtils.withTmpDir();
 
-    fs.writeFileSync("./package.json", "{}");
+  it("can continuously reload code", async () => {
+    fs.writeFileSync("./package.json", '{ "license": "MIT" }');
+    childProcess.execSync("yarn link reloady && yarn ");
 
     fs.writeFileSync(
       "./debug.js",
@@ -18,7 +19,7 @@ describe("when reloady is run with node", () => {
     fs.writeFileSync(
       "./index.js",
       `
-const reloady = require(${JSON.stringify(reloadyPath)});
+const reloady = require("reloady");
 
 (async () => {
   await reloady({
@@ -36,12 +37,14 @@ const reloady = require(${JSON.stringify(reloadyPath)});
       "./debug.js",
       `module.exports = () => {console.error("bar");};`
     );
+    await TestUtils.wait(100);
     expect(await nodeProcess.getOutput()).toContain("bar");
 
     fs.writeFileSync(
       "./debug.js",
       `module.exports = () => {console.error("baz");};`
     );
+    await TestUtils.wait(100);
     expect(await nodeProcess.getOutput()).toContain("baz");
 
     nodeProcess.exit();

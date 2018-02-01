@@ -4,8 +4,9 @@ import fs from "fs";
 import * as TestUtils from "./test_utils";
 
 describe("when reloady is run in a jest test", () => {
+  TestUtils.withTmpDir();
+
   it("can continuously reload code", async () => {
-    TestUtils.inTempDir();
     const reloadyPath = require.resolve("../lib");
 
     fs.writeFileSync("./package.json", "{}");
