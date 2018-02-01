@@ -33,17 +33,17 @@ it("runs", async () => {
     const jestProcess = new TestUtils.WrappedProcess(
       "CI=true jest --json index.test.js"
     );
-    await TestUtils.wait(1000);
+    await TestUtils.wait(2000);
     fs.writeFileSync(
       "./debug.js",
       `module.exports = () => {console.log("bar");};`
     );
-    await TestUtils.wait(500);
+    await TestUtils.wait(1000);
     fs.writeFileSync(
       "./debug.js",
       `module.exports = () => {console.log("baz");};`
     );
-    await TestUtils.wait(500);
+    await TestUtils.wait(1000);
     const output = jestProcess.getOutput();
     expect(output).toContain("bar");
     expect(output).toContain("foo");
