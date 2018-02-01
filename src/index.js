@@ -27,7 +27,7 @@ module.exports = async function reloady(options): Promise<void> {
   }
   while (true) {
     try {
-      const fn = require(modulePath);
+      const fn = requireRecached(modulePath);
       await fn(input);
     } catch (e) {
       console.error(e);
@@ -35,24 +35,22 @@ module.exports = async function reloady(options): Promise<void> {
     const action = await new Promise(resolve => {
       state.resolve = resolve;
     });
-    uncache(modulePath);
   }
 };
 
-function uncache(modulePath: string) {
+function requireRecached(modulePath: string) {
   if (isRunningInJest()) {
-    const newPath = tmp.tmpNameSync({ dir: os.tmpdir() });
-    console.log(newPath);
-    fs.linkSync(modulePath, newPath);
-    jest.unmock(modulePath);
-    jest.mock(modulePath, () => {
-      return require.requireActual(newPath);
-    }, { virtual: true });
-    return;
+    return requireRecachedJest(modulePath);
   }
   delete require.cache[require.resolve(modulePath)];
+  return require(modulePath);
 }
 
+function requireRecachedJest(modulePath: string) {
+  const newPath = tmp.tmpNameSync({ dir: os.tmpdir() });
+  fs.linkSync(modulePath, newPath);
+  return require(newPath);
+}
 
 function isRunningInJest(): boolean {
   return !!require.requireActual;
