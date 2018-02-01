@@ -1,4 +1,5 @@
 # Reloady
+[![CircleCI](https://circleci.com/gh/sleexyz/reloady.svg?style=svg)](https://circleci.com/gh/sleexyz/reloady)
 [![npm version](https://img.shields.io/npm/v/reloady.svg?style=flat-square)](https://www.npmjs.com/package/reloady)
 
 
