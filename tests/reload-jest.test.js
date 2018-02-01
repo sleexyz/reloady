@@ -1,15 +1,15 @@
 //@flow
 import tmp from "tmp";
 import fs from "fs";
+import childProcess from "child_process";
 import * as TestUtils from "./test_utils";
 
 describe("when reloady is run in a jest test", () => {
   TestUtils.withTmpDir();
 
   it("can continuously reload code", async () => {
-    const reloadyPath = require.resolve("../lib");
-
-    fs.writeFileSync("./package.json", "{}");
+    fs.writeFileSync("./package.json", '{ "license": "MIT" }');
+    childProcess.execSync("yarn link reloady && yarn ");
 
     fs.writeFileSync(
       "./debug.js",
@@ -19,7 +19,7 @@ describe("when reloady is run in a jest test", () => {
     fs.writeFileSync(
       "./index.test.js",
       `
-const reloady = require(${JSON.stringify(reloadyPath)});
+const reloady = require("reloady");
 
 it("runs", async () => {
   await reloady({
@@ -33,22 +33,22 @@ it("runs", async () => {
     const jestProcess = new TestUtils.WrappedProcess(
       "CI=true jest --json index.test.js"
     );
-
-    expect(await jestProcess.getOutput()).toContain("foo");
-
+    await TestUtils.wait(1000);
     fs.writeFileSync(
       "./debug.js",
       `module.exports = () => {console.log("bar");};`
     );
-
-    expect(await jestProcess.getOutput()).toContain("bar");
-
+    await TestUtils.wait(500);
     fs.writeFileSync(
       "./debug.js",
       `module.exports = () => {console.log("baz");};`
     );
+    await TestUtils.wait(500);
+    const output = jestProcess.getOutput();
+    expect(output).toContain("bar");
+    expect(output).toContain("foo");
+    expect(output).toContain("baz");
 
-    expect(await jestProcess.getOutput()).toContain("baz");
     jestProcess.exit();
   });
 });

@@ -19,11 +19,9 @@ export async function wait(n: number) {
 
 export class WrappedProcess {
   state: {
-    queue: Array<string>,
-    resolve: ?(string) => void
+    queue: Array<string>
   } = {
-    queue: [],
-    resolve: undefined
+    queue: []
   };
 
   jestProcess: *;
@@ -32,26 +30,11 @@ export class WrappedProcess {
     this.jestProcess = childProcess.exec(shellCmd);
     this.jestProcess.stderr.on("data", chunk => {
       this.state.queue.push(chunk.toString());
-      if (this.state.resolve) {
-        (this.state.resolve: any)(this._getOutput());
-      }
     });
   }
 
-  _getOutput(): string {
-    const output = this.state.queue.join("");
-    this.state.queue = [];
-    delete this.state.resolve;
-    return output;
-  }
-
-  getOutput(): Promise<string> {
-    return new Promise(resolve => {
-      if (this.state.queue.length > 0) {
-        return resolve(this._getOutput());
-      }
-      this.state.resolve = resolve;
-    });
+  getOutput(): string {
+    return this.state.queue.join("");
   }
   exit() {
     this.jestProcess.kill();

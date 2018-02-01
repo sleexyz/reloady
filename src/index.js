@@ -1,14 +1,20 @@
-import sane from "sane";
+// @flow
+import chokidar from "chokidar";
 import path from "path";
 import fs from "fs";
 import os from "os";
 import tmp from "tmp";
 
 type State = {
-  resolve: ?Promise<void>
+  resolve: ?(any) => void
 };
 
-module.exports = async function reloady(options): Promise<void> {
+type Options = {
+  path: string,
+  input: any
+};
+
+module.exports = async function reloady(options: Options): Promise<void> {
   const { path: modulePath, input } = options;
 
   let state: State = {
@@ -17,12 +23,9 @@ module.exports = async function reloady(options): Promise<void> {
 
   {
     const pathName = require.resolve(modulePath);
-    const dir = path.dirname(pathName);
-    const watcher = sane(dir);
-    watcher.on("change", filename => {
-      if (filename === path.basename(pathName)) {
-        state.resolve();
-      }
+    const watcher = chokidar.watch(pathName);
+    watcher.on("change", () => {
+      state.resolve && state.resolve();
     });
   }
   while (true) {
@@ -43,15 +46,15 @@ function requireRecached(modulePath: string) {
     return requireRecachedJest(modulePath);
   }
   delete require.cache[require.resolve(modulePath)];
-  return require(modulePath);
+  return (require: any)(modulePath);
 }
 
 function requireRecachedJest(modulePath: string) {
   const newPath = tmp.tmpNameSync({ dir: os.tmpdir() });
   fs.linkSync(modulePath, newPath);
-  return require(newPath);
+  return (require: any)(newPath);
 }
 
 function isRunningInJest(): boolean {
-  return !!require.requireActual;
+  return !!(require: any).requireActual;
 }

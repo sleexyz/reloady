@@ -16,7 +16,7 @@
     "tmp": "^0.0.33"
   },
   "dependencies": {
-    "sane": "^2.3.0"
+    "chokidar": "^2.0.0"
   },
   "jest": {
     "setupTestFrameworkScriptFile": "./tests/test_utils.js"

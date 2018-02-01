@@ -31,21 +31,23 @@ const reloady = require("reloady");
     );
 
     const nodeProcess = new TestUtils.WrappedProcess("node index.js");
-    expect(await nodeProcess.getOutput()).toContain("foo");
+    await TestUtils.wait(200);
 
     fs.writeFileSync(
       "./debug.js",
       `module.exports = () => {console.error("bar");};`
     );
     await TestUtils.wait(100);
-    expect(await nodeProcess.getOutput()).toContain("bar");
 
     fs.writeFileSync(
       "./debug.js",
       `module.exports = () => {console.error("baz");};`
     );
     await TestUtils.wait(100);
-    expect(await nodeProcess.getOutput()).toContain("baz");
+    const output = nodeProcess.getOutput();
+    expect(output).toContain("foo");
+    expect(output).toContain("bar");
+    expect(output).toContain("baz");
 
     nodeProcess.exit();
   });
