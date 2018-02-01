@@ -1,6 +1,6 @@
 {
   "name": "reloady",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "node code auto reload",
   "main": "lib/index.js",
   "repository": "https://github.com/sleexyz/reloady",
@@ -29,6 +29,7 @@
     "check-all": "flow && yarn test && yarn format-check",
     "format": "prettier --write '{src,tests}/**/*.js'",
     "format-check": "prettier -l '{src,tests}/**/*.js'",
-    "test": "yarn link && jest --runInBand --forceExit"
+    "test": "yarn link && jest --runInBand --forceExit",
+    "prepublish": "yarn build"
   }
 }
