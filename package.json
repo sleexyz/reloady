@@ -30,6 +30,6 @@
     "format": "prettier --write '{src,tests}/**/*.js'",
     "format-check": "prettier -l '{src,tests}/**/*.js'",
     "test": "yarn link && jest --runInBand --forceExit",
-    "prepublish": "yarn build"
+    "prepublish": "yarn clean && yarn build"
   }
 }
